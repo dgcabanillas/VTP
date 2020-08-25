@@ -1,0 +1,64 @@
+VTP
+VLAN trunking protocol por sus siglas en inglés. Permite administrar una red de VLAN's de manera ordenada y consistente a través de la red.
+Dicho de otra manera, VTP nos permite crear, modificar y eliminar VLAN's dentro de nuestra red.
+Sin VTP, probablemente tendríamos que configurar manualmente las VLAN en cada uno de los swicthes. Lo que seguramente nos demandaría mucho tiempo además de porder cometer errores. 
+
+    Frame tagging  
+        Es la tecnología que permite mantener el rastro de las tramas de una misma VLAN que viajan a través de toda la red de switches.
+        Existen dos tipos:
+            - ISL       
+            - 802.1Q
+        La principal diferencia entre ambas es la manera en que etiquetan las tramas, mientras que ISL encapsula trama en una nueva, la cual se obtiene de la trama original mas una marca que identifica la VLAN de origen, 802.1Q modifica el header de la trama original para añadirle la marca de la VLAN. Esto permite que máquinas que están en distintos switches pertenezcan a una misma VLAN.
+        Actualmente, el frame tagging 802.1Q es el más utlizado puesto que es el estadar de la IEEE.
+
+    Trunk Port
+        Son los puertos que se conectan a otros switches para formar un tronco y permitir el paso de las tramas de una misma VLAN en una red formada por switches. Cabe resaltar que un tronco puede pertenecer a más de una VLAN.
+
+    Access Port
+        Los puertos de acceso, son aquellos puertos que permiten conectar un HOST a una VLAN. Estos puertos sólo pueden pertenecer a una VLAN.
+---------------------
+VTP Domain
+    Es un grupo de swicthes interconectados, estos swicthes comparten los detalles de configuración de las VLAN.
+    El alcance de los VTP Domain quedan restringidos por los router.
+    El nombre del VTP Domain se asigna siempre al inicio de la configuración del VTP. Para que un switch pertenezca a un VTP Domain, debe configurarse con el nombre de dicho VTP Domain. Si el nombre del VTP Domain no es especificado, el VTP Server no podrá crear, modificar o eliminar las VLAN's. Y peor aún, la información de las VLAN's no podrán enviarse a las VTP Client.
+    Es necesario aclarar que un switch sólo puede pertenecer a un VTP Domain.
+
+---------------------
+VTP Modes
+    VTP Server
+        Es la configuración del switch que permite crear, modificar y eliminar una VLAN dentro de la red de swicthes. Además el VTP Server será el ecargado de enviar y redistribuir la información del VTP a los VTP Client que están dentro del misma VTP Domain. También podrá sincronizar la información de otros VTP Server que tienen el Revision Number más alto.
+        Todos los switches de Cisco está configurados por defecto como VTP Server. Por lo general, los VTP Domain tienen un VTP Server principal y otro secundario por si el principal llegase a fallar.
+
+    VTP Client
+        Es la configuración del switch que actualiza su información a partir de la existente en el VTP Server.   
+        El VTP Cliente puede enviar y redistribuir la información del VTP que envía el VTP Server hacia los demás VTP Client. También puede actualiar su configuración del VTP desde la información enviada del VTP Server. 
+        Este tipo de configuración no permite tener administración alguna sobre la VTP, es decir, no puede crear, modificar o eliminar las VLAN.
+
+
+    VTP Transparent
+        Este tipo de configuración hace que el switch no participe de la VTP; pero sin embargo puede reenviar la información del VTP Server a los demás switches que sean VTP Client a través de su puerto troncal. Cabe mencionar que este switch puede crear, modificar y eliminar VLANs de manera local.
+
+Configuration Revision Number
+    Es el número que indica el nivel de revisión en la que se encuentra un paquete VTP.
+    Este número se inicia en 0 e incrementa en 1 cada vez que se realiza algún cambio dentro de la configuración del VTP.
+    Dicho esto, se debe tener mucho cuidado al momento de añadir un nuevo switch al VTP Domain ya que puede tener el Revision Number más alto que la del VTP Server y esto ocasione que toda la configuración se venga abajo. Recordemos que los switches de Cisco están configurados por defecto como VTP Server y el VTP Server se sincroniza a partir de otro VTP Server con el revisión number más alto.
+
+VTP Messages
+    Summary advertisements
+        Son los mensajes que envía el VTP Server cada 5 minutos por defecto a los switches que están dentro del VTP Domain.
+        Estos mensajes incluyen el nombre del VTP, el número de revisión de configuración, la versión del VTP; pero no tiene los detalles de la configuración de las VLAN.
+        Cada vez que un switch recive este mensaje, este compara el nombre de su VTP Domain con el dado en el mensaje, si los nombres no coinciden, el switch ignora los paquetes. Pero si los nombres coinciden, procede con la comparación de su propio número de revisión con el dado en el mensaje, si el su número de revisión es mayor o igual que el del mensaje, el paquete es ignorado; pero si es menor, el VTP Client actualizará su información. 
+
+    Subset advertisements
+        Este mensaje es el que sigue del Summary Advertisement y contiene la información en detalle de la configuración de las VLAN.
+
+    Advertisement request
+        Es el mensaje que envía el VTP Client al VTP Server solicitando el VTP Summary Advertisement y el VTP Subset Advertisement. 
+        Cuando este mensaje llega al VTP Server, este responde enviando los paquetes solicitados. 
+
+VTP Pruning 
+    
+
+Resumen 
+    VTP permite que las configuraciones de VLAN se mantengan consistentemente en un dominio vtp.
+    vtp reduce las posibilidades de errores y inconsistencias en la configuración de vlan

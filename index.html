@@ -3,38 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
     <title> VTP </title>
 </head>
 <body>
-    
-    <h1> VLAN TRUNKING PROTOCOL (VTP) </h1>
-    <h2> Frame Tagging </h2>
-    <ul>
-        <li> ¿ qué es ? </li>
-        <li> ISL </li>
-        <li> 802.1Q </li>
-    </ul>
-    <h2> Trunk Port </h2>
-    <ul>
-        <li> ¿ qué es ?</li>
-        <li> Configuración </li>
-    </ul>
-    <h2> VTP </h2>
-    <ul> 
-        <li> ¿ Qué es ? </li>
-        <li> ¿ Para qué sirve ? </li>
-        <li> Componentes </li>
-        <li>
+
+    <div class="vtp-contenido">
+        <aside class="menu-indice">
             <ul>
-                <li> VTP Server </li>
-                <li> VTP Client </li>
-                <li> VTP Advertisement </li>
-                <li> VTP Domain </li>
+                <li> <a href="#presentacion"> Presentación </a> </li>
+                <li> <a href="#introduccion"> Introducción </a> </li>
+                <li> <a href="#conceptos-previos"> Conceptos previos </a> </li>
+                <li> <a href="#vtp-domain"> VTP Domain </a> </li>
+                <li> <a href="#vtp-modes"> VTP Modes </a> </li>
+                <li> <a href="#revision-number"> Configuration Revision Number </a></li>
+                <li> <a href="#vtp-messages"> VTP Messages </a> </li>
+                <li> <a href="#vtp-pruning"> VTP Pruning </a> </li>
             </ul>
-        </li>
-        <li> VTP Modes </li>
-        <li> Ventajas </li>
-        <li> Desventajas </li>
-    </ul>
+        </aside>
+
+        <main class="contenido">
+
+            <section id="presentacion">
+                <h3> Práctica domiciliaria Nro 3 </h3>
+                <h1 class="title"> VLAN Trunking Protocol </h1>
+                <img src="../img/logo-uni.png" alt="logo-uni">
+                <div class="datos-escuela">
+                    <p> Prof. Manuel Castillo </p>
+                    <p> Administracion de Redes </p>
+                    <p> Escuela profesional de ciencias de la computación </p>
+                    <p> Facultad de ciencias </p>
+                    <p> Universidad Nacional de Ingeniería </p>
+                </div>
+                <div class="integrantes">
+                    <h3> Integrantes </h3>
+                    <p> Cabanillas Coaquira Diego Gregory </p>
+                    <p> Borjas Córdova Guillermo Joel </p>
+                </div>
+            </section>
+
+            <hr>
+
+            <section id="introduccion">
+                <h1> VTP - VLAN Trunking Protocol </h1>
+                <p class="information">
+                    VLAN trunking protocol por sus siglas en inglés. Permite administrar una red de VLAN's de manera ordenada y consistente a través de la red. 
+                    <br>
+                    Dicho de otra manera, VTP nos permite crear, modificar y eliminar VLAN's dentro de la red.
+                    <br>
+                    Sin VTP, probablemente se tendría que configurar manualmente las VLAN en cada uno de los swicthes. Lo que seguramente demandaría mucho tiempo además de poder cometer errores. 
+                </p>
+                <div class="content">
+                    <p>
+                        Para poder configurar correctamente una VTP es necesario conocer lo siguiente:
+                    </p>
+                    <ul>
+                        <li> Todos los componentes de la VTP deben tener la misma versión. </li>
+                        <li> 
+                            El nombre del VTP Domain debe de coincidir en todos los componentes de la VTP, es importante resaltar que dicho nombre es sensible a las mayúsculas 
+                        </li>
+                        <li>
+                            El password de los VTP Client y VTP Transparent deben de coincidir con la asignada en el VTP Server.
+                        </li>
+                        <li>
+                            Los puertos troncales deben de configurarse entre los widthes. 
+                        </li>
+                    </ul>
+                </div>
+                <div class="img-container">
+                    <img src="./img/estructura.png" alt="" width="600px">
+                    <p> <b>Img 1 </b> - Estructura inicial VTP </p>
+                </div>
+            </section>
+
+            <hr>
+
+            <section id="conceptos-previos">
+                <h2> Conceptos Previos </h2>
+                <div class="content">
+                    <h3> Frame tagging </h3>
+                    <p>
+                        Es la tecnología que permite mantener el rastro de las tramas de una misma VLAN que viajan a través de toda la red de switches.
+                        <br>  
+                        Existen dos tipos de frame tagging:
+                    </p>
+                    <ul>
+                        <li> ISL </li>
+                        <li> 802.1Q </li>
+                    </ul>
+                    <p>
+                        La principal diferencia entre ambas es la manera en que etiquetan las tramas. Mientras que ISL encapsula la trama en una nueva, la cual se obtiene de la trama original mas una marca que identifica la VLAN de origen, 802.1Q modifica el header de la trama original para añadirle la marca de la VLAN. Esto permite que máquinas que están en distintos switches pertenezcan a una misma VLAN.
+                        <br>
+                        Actualmente, el encapsulamiento 802.1Q es el más utlizado puesto que es el estándar de la IEEE.
+                    </p>
+                </div>
+                <div class="content">
+                    <h3> Trunk Port </h3>
+                    <p>
+                        Son los puertos que se conectan a otros switches para formar un tronco y permitir el paso de las tramas de una misma VLAN en una red formada por switches. Cabe resaltar que un tronco puede pertenecer a más de una VLAN.
+                    </p>
+                </div>
+                <div class="content">
+                    <h3> Access Port </h3>
+                    <p>
+                        Los puertos de acceso, son aquellos puertos que permiten conectar un HOST a una VLAN. Estos puertos sólo pueden pertenecer a una VLAN.
+                    </p>   
+                </div>
+            </section>
+
+            <hr>
+
+            <section id="vtp-domain">
+                <h2> VTP Domain </h2>
+                <p class="information">
+                    Es un grupo de swicthes interconectados, estos swicthes comparten los detalles de configuración de las VLAN.
+                    El alcance de los VTP Domain quedan restringidos por los router.
+                    El nombre del VTP Domain se asigna siempre al inicio de la configuración del VTP. Para que un switch pertenezca a un VTP Domain, debe configurarse con el nombre de dicho VTP Domain. Si el nombre del VTP Domain no es especificado, el VTP Server no podrá crear, modificar o eliminar las VLAN's. Y peor aún, la información de las VLAN's no podrán enviarse a las VTP Client.
+                    Es necesario aclarar que un switch sólo puede pertenecer a un VTP Domain.
+                </p>
+            </section>
+
+            <hr>
+
+            <section id="vtp-modes">
+                <h2> VTP Modes </h2>
+                <p class="information">
+                    Los swicthes que están dentro de un VTP Domain pueden tener 3 modos de configuración.
+                </p>
+                <div class="content">
+                    <h3> VTP Server </h3>
+                    <p>
+                        Es la configuración del switch que permite crear, modificar y eliminar una VLAN dentro de la red de swicthes. Además el VTP Server será el ecargado de enviar y redistribuir la información del VTP a los VTP Client que están dentro del misma VTP Domain. También podrá sincronizar la información de otros VTP Server que tienen el Revision Number más alto.
+                        Todos los switches de Cisco está configurados por defecto como VTP Server. Por lo general, los VTP Domain tienen un VTP Server principal y otro secundario por si el principal llegase a fallar.
+                    </p>
+                    <h3> VTP Client </h3>
+                    <p>
+                        Es la configuración del switch que actualiza su información a partir de la existente en el VTP Server.   
+                        El VTP Cliente puede enviar y redistribuir la información del VTP que envía el VTP Server hacia los demás VTP Client. También puede actualiar su configuración del VTP desde la información enviada del VTP Server. 
+                        Este tipo de configuración no permite tener administración alguna sobre la VTP, es decir, no puede crear, modificar o eliminar las VLAN.
+                    </p>
+                    <h3> VTP Transparent </h3>
+                    <p>
+                        Este tipo de configuración hace que el switch no participe de la VTP; pero sin embargo puede reenviar la información del VTP Server a los demás switches que sean VTP Client a través de su puerto troncal. Cabe mencionar que este switch puede crear, modificar y eliminar VLANs de manera local.
+                    </p>
+                </div>
+            </section>
+
+            <hr>
+
+            <section id="revision-number">
+                <h2> Configuration Revision Number </h2>
+                <p class="information">
+                    Es el número que indica el nivel de revisión en la que se encuentra un paquete VTP.
+                    Este número se inicia en 0 e incrementa en 1 cada vez que se realiza algún cambio dentro de la configuración del VTP y luego se envía la información a los VTP Client con el nuevo Revision Number.
+                    Dicho esto, se debe tener mucho cuidado al momento de añadir un nuevo switch al VTP Domain ya que puede tener el Revision Number más alto que la del VTP Server y esto ocasione que toda la configuración se venga abajo. Recordemos que los switches de Cisco están configurados por defecto como VTP Server y el VTP Server se sincroniza a partir de otro VTP Server con el revisión number más alto.
+                </p>
+            </section>
+
+            <hr>
+
+            <section id="vtp-messages">
+                <h2> VTP Messages </h2>
+                <p class="information">
+                    Dentro de la red de switches configurados con VTP se transmiten 3 tipos de mensajes.
+                </p>
+                <div class="content">
+                    <h3> Summary advertisements </h3>
+                    <p>
+                        Son los mensajes que envía el VTP Server cada 5 minutos por defecto a los switches que están dentro del VTP Domain.
+                        Estos mensajes incluyen el nombre del VTP, el número de revisión de configuración, la versión del VTP; pero no tiene los detalles de la configuración de las VLAN.
+                        Cada vez que un switch recive este mensaje, este compara el nombre de su VTP Domain con el dado en el mensaje, si los nombres no coinciden, el switch ignora los paquetes. Pero si los nombres coinciden, procede con la comparación de su propio número de revisión con el dado en el mensaje, si el su número de revisión es mayor o igual que el del mensaje, el paquete es ignorado; pero si es menor, el VTP Client actualizará su información. 
+                    </p>
+                </div>
+                <div class="content">
+                    <h3> Subset advertisements </h3>
+                    <p>
+                        Este mensaje es el que sigue del Summary Advertisement y contiene la información en detalle de la configuración de las VLAN.
+                    </p>
+                </div>
+                <div class="content">
+                    <h3> Advertisement request </h3>
+                    <p>
+                        Es el mensaje que envía el VTP Client al VTP Server solicitando el VTP Summary Advertisement y el VTP Subset Advertisement. 
+                        Cuando este mensaje llega al VTP Server, este responde enviando los paquetes solicitados. 
+                    </p>
+                </div>        
+            </section>
+
+            <hr>
+        
+            <section id="vtp-pruning">
+                <h2> VTP Pruning </h2>
+                <p class="information">
+                    VTP pruning ayuda a que los mensajes de broadcast sólo recorran los enlaces troncales que necesitan la información.
+                    Es decir, si un switch SW no tiene configurado un puerto para la VLAN 10, y un mensaje de broadcast es enviado a través de la VLAN 10, ese mensaje no será transmitido a través del switch SW. Esto evita que haya un tráfico innecesario de datos dentro la red.
+                    <br>
+                    <br>
+                    VTP pruning por defecto está desactivado en los switches de Cisco. 
+                </p>
+            </section>
+
+        </main>
+
 </body>
 </html>
